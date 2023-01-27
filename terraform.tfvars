@@ -1,5 +1,5 @@
 rg_name = "rg-m7t2e1"
-rg_location = "eastus2"
+rg_location = "eastus"
 rg_group = 8
 vnet_name = "my-vnet"
 vnet_address_space = ["12.0.0.0/16"]
@@ -24,3 +24,5 @@ aks_sp_client_secret = "1EZ8Q~kcyElfdakRBrCQYh24._h1yiXn0ekxSaha"
 aks_net_plugin = "azure"
 aks_net_policy = "azure"
 aks_pod_max = 80
+file = "ansible-jenkins.sh"
+hostname = "jenkins"

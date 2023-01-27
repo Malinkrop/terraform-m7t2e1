@@ -33,3 +33,7 @@ variable "aks_sp_client_secret" {}
 variable "aks_net_plugin" {}
 variable "aks_net_policy" {}
 variable "aks_pod_max" {}
+
+# VM
+variable "file" {}
+variable "hostname" {}

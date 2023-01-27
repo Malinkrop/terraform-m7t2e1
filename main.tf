@@ -1,3 +1,5 @@
+### RESOURCE GROUP / NETWORKING
+
 resource "azurerm_resource_group" "rg-m7t2e1" {
     name = var.rg_name
     location = var.rg_location
@@ -20,6 +22,67 @@ resource "azurerm_subnet" "subnet-m7t2e1" {
     virtual_network_name = azurerm_virtual_network.vnet-m7t2e1.name
     address_prefixes = var.subnet_address_prefixes
 }
+
+resource "azurerm_public_ip" "pip-m7t2e1" {
+  name = "public-ip"
+  resource_group_name = azurerm_resource_group.rg-m7t2e1.name
+  location = azurerm_resource_group.rg-m7t2e1.location
+  allocation_method = "Static"
+  tags = {
+    "diplomado" = "m7t2e1"
+  }
+}
+
+resource "azurerm_network_interface" "netinter-m7t2e1" {
+  name = "networkinterface"
+  location = azurerm_resource_group.rg-m7t2e1.location
+  resource_group_name = azurerm_resource_group.rg-m7t2e1.name
+  ip_configuration {
+    name ="internet"
+    subnet_id = azurerm_subnet.subnet-m7t2e1.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.pip-m7t2e1.id
+  }
+}
+### JENKINS VM
+
+resource "azurerm_linux_virtual_machine" "vm-jenkins" {
+    name = var.hostname
+    resource_group_name = azurerm_resource_group.rg-m7t2e1.name
+    location = azurerm_resource_group.rg-m7t2e1.location
+    size = "Standard_B1s"
+    network_interface_ids = [azurerm_network_interface.netinter-m7t2e1.id]
+    os_disk {
+      caching = "ReadWrite"
+      storage_account_type = "Standard_LRS"
+    }
+    source_image_reference {
+      publisher = "Canonical"
+      offer = "UbuntuServer"
+      sku = "16.04-LTS"
+      version = "Latest"
+    }
+    computer_name = var.hostname
+    admin_username = "jenkinsadmin"
+    admin_password = "Q1w2e3r4t5y6u7$"
+    disable_password_authentication = false
+ }
+
+resource "azurerm_virtual_machine_extension" "vmext" {
+    virtual_machine_id = azurerm_linux_virtual_machine.vm-jenkins
+    name  = "jenkins-vmext"
+    publisher            = "Microsoft.Azure.Extensions"
+    type                 = "CustomScript"
+    type_handler_version = "2.0"
+
+    protected_settings = <<PROT
+    {
+        "script": "${base64encode(file(var.file))}"
+    }
+    PROT
+}
+
+### KUBERNETES
 
 resource "azurerm_container_registry" "acr-m7t2e1" {
     name = var.acr_name
