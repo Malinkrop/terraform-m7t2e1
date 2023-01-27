@@ -3,7 +3,7 @@
 Se requiere habilitar un ambiente de CI/CD para esto es necesario que en el ambiente se pueda
 compilar en jenkins y desplegar en kubernetes. requerimientos mediante terraform se debe:
 
-> OK 1.- Crear una máquina en la cual se pueda instalar jenkins (Mediante ansible).
+> OK 1.- Crear una máquina en la cual se pueda instalar jenkins (Mediante ansible). [playbook en el repo]
 
 > OK 2.- Crear un cluster kubernetes el cual tenga:
 

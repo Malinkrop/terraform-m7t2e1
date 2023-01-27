@@ -63,10 +63,28 @@ resource "azurerm_linux_virtual_machine" "vm-jenkins" {
       version = "Latest"
     }
     computer_name = var.hostname
-    admin_username = "jenkinsadmin"
-    admin_password = "Q1w2e3r4t5y6u7$"
+    admin_username = var.username
+    admin_password = var.passwd
     disable_password_authentication = false
  }
+
+resource "null_resource" remoteExecProvisionerWFolder {
+
+  provisioner "file" {
+    source      = "ansible/inventory.txt"
+    destination = "/tmp/inventory.txt"
+    source      = "ansible/playbook.yml"
+    destination = "/tmp/playbook.yml"
+  }
+
+  connection {
+    host     = azurerm_public_ip.pip-m7t2e1.ip_address
+    type     = "ssh"
+    user     = var.username
+    password = var.passwd
+    agent    = "false"
+  }
+}
 
 resource "azurerm_virtual_machine_extension" "vmext" {
     virtual_machine_id = azurerm_linux_virtual_machine.vm-jenkins
@@ -80,6 +98,7 @@ resource "azurerm_virtual_machine_extension" "vmext" {
         "script": "${base64encode(file(var.file))}"
     }
     PROT
+    depends_on = [null_resource]
 }
 
 ### KUBERNETES

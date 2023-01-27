@@ -37,3 +37,5 @@ variable "aks_pod_max" {}
 # VM
 variable "file" {}
 variable "hostname" {}
+variable "username" {}
+variable "passwd" {}

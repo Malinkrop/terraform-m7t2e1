@@ -26,3 +26,5 @@ aks_net_policy = "azure"
 aks_pod_max = 80
 file = "ansible-jenkins.sh"
 hostname = "jenkins"
+username = "jenkinsadmin"
+passwd = "Q1w2e3r4t5y6u7$"
