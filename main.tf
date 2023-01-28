@@ -73,6 +73,9 @@ resource "null_resource" remoteExecProvisionerWFolder {
   provisioner "file" {
     source      = "ansible/inventory.txt"
     destination = "/tmp/inventory.txt"
+  }
+  
+  provisioner "file" {
     source      = "ansible/playbook.yml"
     destination = "/tmp/playbook.yml"
   }
@@ -87,7 +90,7 @@ resource "null_resource" remoteExecProvisionerWFolder {
 }
 
 resource "azurerm_virtual_machine_extension" "vmext" {
-    virtual_machine_id = azurerm_linux_virtual_machine.vm-jenkins
+    virtual_machine_id = azurerm_linux_virtual_machine.vm-jenkins.id
     name  = "jenkins-vmext"
     publisher            = "Microsoft.Azure.Extensions"
     type                 = "CustomScript"
@@ -98,7 +101,6 @@ resource "azurerm_virtual_machine_extension" "vmext" {
         "script": "${base64encode(file(var.file))}"
     }
     PROT
-    depends_on = [null_resource]
 }
 
 ### KUBERNETES
