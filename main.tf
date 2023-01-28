@@ -74,12 +74,15 @@ resource "null_resource" remoteExecProvisionerWFolder {
     source      = "ansible/inventory.txt"
     destination = "/tmp/inventory.txt"
   }
+<<<<<<< HEAD
   
+=======
+    
+>>>>>>> 72eeb780dba20646c696efa8ea0b12430d09729d
   provisioner "file" {
     source      = "ansible/playbook.yml"
     destination = "/tmp/playbook.yml"
   }
-
   connection {
     host     = azurerm_public_ip.pip-m7t2e1.ip_address
     type     = "ssh"
